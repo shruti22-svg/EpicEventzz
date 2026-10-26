@@ -1,0 +1,221 @@
+
+<template>
+    <section class="explorer">
+
+        <!-- EVENT LIST VIEW -->
+        <template lwc:if={showEventList}>
+
+            <!-- HERO SECTION -->
+            <div class="hero">
+                <p class="eyebrow">EPICEVENTZZ • LIVE EXPERIENCES</p>
+                <h1>Discover Your Next Event</h1>
+                <p>
+                    Explore unforgettable experiences and find
+                    your next favorite event.
+                </p>
+            </div>
+
+            <!-- ERROR MESSAGE -->
+            <template lwc:if={error}>
+                <div class="message" role="alert">
+                    Unable to load events: {error}
+                </div>
+            </template>
+
+            <template lwc:else>
+
+                <!-- EVENT CARDS -->
+                <template lwc:if={events.length}>
+                    <div class="event-grid">
+
+                        <template for:each={events} for:item="event">
+                            <article
+                                key={event.Id}
+                                class="event-card">
+
+                                <div class="card-banner">
+                                    <span class="event-tag">
+                                        LIVE EVENT
+                                    </span>
+
+                                    <span class="banner-symbol">
+                                        ✦
+                                    </span>
+                                </div>
+
+                                <div class="card-content">
+
+                                    <h2>{event.Name}</h2>
+
+                                    <p class="description">
+                                        {event.Event_Description__c}
+                                    </p>
+
+                                    <p class="detail">
+                                        <lightning-icon
+                                            icon-name="utility:location"
+                                            size="x-small">
+                                        </lightning-icon>
+
+                                        {event.Venue__r.Name}
+                                    </p>
+
+                                    <p class="detail">
+                                        <lightning-icon
+                                            icon-name="utility:money"
+                                            size="x-small">
+                                        </lightning-icon>
+
+                                        ₹{event.Ticket_Price__c}
+                                    </p>
+
+                                    <div class="card-footer">
+
+                                        <span class="seats">
+                                            {event.Available_Seats__c}
+                                            seats left
+                                        </span>
+
+                                        <button
+                                            class="explore-button"
+                                            data-id={event.Id}
+                                            onclick={handleViewDetails}>
+                                            View Details
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </article>
+                        </template>
+
+                    </div>
+                </template>
+
+                <!-- NO EVENTS -->
+                <template lwc:else>
+                    <div class="message">
+                        No published events are available right now.
+                    </div>
+                </template>
+
+            </template>
+
+        </template>
+
+        <!-- EVENT DETAILS VIEW -->
+        <template lwc:if={showDetailsView}>
+
+            <div class="details-overlay">
+                <div class="details-panel">
+
+                    <button
+                        class="back-button"
+                        onclick={handleBackToEvents}>
+                        ← Back to Events
+                    </button>
+
+                    <p class="eyebrow">
+                        EPICEVENTZZ • EVENT DETAILS
+                    </p>
+
+                    <h2>{selectedEvent.Name}</h2>
+
+                    <p class="description">
+                        {selectedEvent.Event_Description__c}
+                    </p>
+
+                    <div class="details-info">
+
+                        <p>
+                            <strong>Venue:</strong>
+                            {selectedEvent.Venue__r.Name}
+                        </p>
+
+                        <p>
+                            <strong>Address:</strong>
+                            {selectedEvent.Venue__r.Address__c}
+                        </p>
+
+                        <p>
+                            <strong>Ticket Price:</strong>
+                            ₹{selectedEvent.Ticket_Price__c}
+                        </p>
+
+                        <p>
+                            <strong>Available Seats:</strong>
+                            {selectedEvent.Available_Seats__c}
+                        </p>
+
+                    </div>
+
+                    <button
+                        class="explore-button"
+                        onclick={handleBookTickets}>
+                        Book Tickets
+                    </button>
+
+                </div>
+            </div>
+
+        </template>
+
+        <!-- BOOKING VIEW -->
+        <template lwc:if={showBookingView}>
+
+            <div class="details-overlay">
+                <div class="details-panel">
+
+                    <button
+                        class="back-button"
+                        onclick={handleBackToDetails}>
+                        ← Back to Event Details
+                    </button>
+
+                    <p class="eyebrow">
+                        EPICEVENTZZ • TICKET BOOKING
+                    </p>
+
+                    <h2>Book Tickets — {selectedEvent.Name}</h2>
+
+                    <div class="booking-section">
+
+                        <lightning-flow
+                            flow-api-name="EpicEventz_Ticket_Booking"
+                            flow-input-variables={bookingFlowInputs}
+                            onstatuschange={handleFlowStatusChange}>
+                        </lightning-flow>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </template>
+
+        <!-- BOOKING RESULT VIEW -->
+        <template lwc:if={showBookingFinished}>
+
+            <div class="details-overlay">
+                <div class="details-panel">
+
+                    <p class="eyebrow">
+                        EPICEVENTZZ • BOOKING STATUS
+                    </p>
+
+                    <h2>{bookingResultTitle}</h2>
+
+                    <p>{bookingResultMessage}</p>
+
+                    <button
+                        class="explore-button"
+                        onclick={handleBackToEvents}>
+                        Explore More Events
+                    </button>
+
+                </div>
+            </div>
+
+        </template>
+
+    </section>
+</template>

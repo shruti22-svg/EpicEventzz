@@ -1,0 +1,15 @@
+{
+  "servers": {
+    "salesforce-dx": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "C:\\Users\\shrut\\salesforce-mcp\\node_modules\\@salesforce\\mcp\\bin\\run.js",
+        "--orgs",
+        "EpicEventzz",
+        "--toolsets",
+        "core,lwc-experts,testing"
+      ]
+    }
+  }
+}

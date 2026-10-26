@@ -1,0 +1,75 @@
+<template>
+
+    <template lwc:if={showButton}>
+        <div class="feedback-wrap">
+            <button class="feedback-button" onclick={openModal}>
+                Give Feedback
+            </button>
+        </div>
+    </template>
+
+    <template lwc:if={isOpen}>
+        <div class="modal-overlay">
+            <div class="modal-panel" role="dialog" aria-modal="true" aria-label="Give feedback">
+
+                <button class="close-button" onclick={closeModal} aria-label="Close">✕</button>
+
+                <p class="eyebrow">EPICEVENTZZ • YOUR FEEDBACK</p>
+                <h2>Tell us about your experience</h2>
+
+                <template lwc:if={loadError}>
+                    <p class="feedback-message error" role="alert">{loadError}</p>
+                </template>
+
+                <template lwc:elseif={hasEvents}>
+
+                    <lightning-combobox
+                        name="event"
+                        label="Event"
+                        placeholder="Choose an event you booked"
+                        options={eventOptions}
+                        value={selectedEventId}
+                        onchange={handleEventChange}>
+                    </lightning-combobox>
+
+                    <lightning-combobox
+                        name="rating"
+                        label="Rating"
+                        placeholder="Choose a rating"
+                        options={ratingOptions}
+                        value={rating}
+                        onchange={handleRatingChange}>
+                    </lightning-combobox>
+
+                    <lightning-textarea
+                        name="comments"
+                        label="Comments (optional)"
+                        max-length="1000"
+                        value={comments}
+                        onchange={handleCommentsChange}>
+                    </lightning-textarea>
+
+                    <button
+                        class="submit-button"
+                        onclick={handleSubmit}
+                        disabled={isSubmitDisabled}>
+                        Submit Feedback
+                    </button>
+
+                </template>
+
+                <template lwc:else>
+                    <p class="note">
+                        You can give feedback once you have a confirmed booking.
+                    </p>
+                </template>
+
+                <template lwc:if={message}>
+                    <p class={messageClass} role="status">{message}</p>
+                </template>
+
+            </div>
+        </div>
+    </template>
+
+</template>
